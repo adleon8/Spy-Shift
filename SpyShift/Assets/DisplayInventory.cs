@@ -22,7 +22,7 @@ public class DisplayInventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       UpdateDisplay();
+        UpdateDisplay();
     }
 
     public void UpdateDisplay()
@@ -41,6 +41,61 @@ public class DisplayInventory : MonoBehaviour
                 itemsDisplayed.Add(inventory.Container[i], obj);
             }
         }
+    }
+
+    // Drops off item from inventory into the game world.
+    void DropItem(InventorySlot slot)
+    {
+        // Checks if player has any of the item left to drop.
+        if (slot.amount <= 0)
+            return;
+
+        // Instantiates item in the game world at the player's position.
+        var droppedItem = Instantiate(slot.item.prefab, Player.instance.transform.position, Quaternion.identity);
+        // Maybe add rigid body here?
+
+        // Decrease the amount of the item in the inventory
+        slot.amount -= 1;
+
+        // If the amount is zero, remove item slot from inventory and display.
+        if (slot.amount <= 0)
+        {
+            inventory.Container.Remove(slot);
+            Destroy(itemsDisplayed[slot]);
+            itemsDisplayed.Remove(slot);
+        }
+        else
+        {
+            // Updates display of the item amount if there are some left.
+           // itemsDisplayed[slot]GetComponentInChildren<TextMeshProUGUI>().text = slot.amount.ToString("n0");
+        }
+
+        UpdateDisplay();
+    }
+
+
+
+    GameObject CreateItemButton(InventorySlot slot, int index)
+    {
+        // Instantiates item's prefab as UI element within the inventory display.
+        var obj = Instantiate(slot.item.prefab, Vector3.zero, Quaternion.identity, transform);
+        obj.GetComponent<RectTransform>().localPosition = GetPosition(index);
+        obj.GetComponentInChildren<TextMeshProUGUI>().text = slot.amount.ToString("n0");
+
+        // Adds a Button component if it doesn't exist
+        var button = obj.GetComponent<Button>();
+        if (button == null)
+        {
+            button = obj.AddComponent();
+        }
+
+        // Configures the button's click event
+        button.onClick.RemoveAllListeners(); // to avoid duplicates.
+        button.onClick.AddListener(() => DropItem(slot));
+
+
+
+
     }
 
     public void CreateDisplay()
