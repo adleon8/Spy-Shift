@@ -11,15 +11,22 @@ public class ItemDatabaseObject : ScriptableObject, ISerializationCallbackReceiv
 
     public void OnAfterDeserialize()
     {
-        GetId = new Dictionary<ItemObject, int>(); // Clears dictionary out to not duplicate anything.
-        GetItem = new Dictionary<int, ItemObject>();
-
-        for (int i = 0; i < Items.Length; i++) // Loops through all the items, automatically populates dictionary.
+        GetId.Clear();
+        GetItem.Clear();
+        for (int i = 0; i < Items.Length; i++)
         {
-            GetId.Add(Items[i], i); // ID is i.
-            GetItem.Add(i, Items[i]);
+            if (!GetId.ContainsKey(Items[i]))
+            {
+                GetId.Add(Items[i], i);
+                GetItem.Add(i, Items[i]);
+            }
+            else
+            {
+                Debug.LogError("Duplicate item detected in ItemDatabase: " + Items[i].name);
+            }
         }
 
+        
 
     }
     public void OnBeforeSerialize()

@@ -24,7 +24,16 @@ public class InventoryObject : ScriptableObject, ISerializationCallbackReceiver
 
     public void AddItem(ItemObject _item, int _amount)
     {
-        for (int i = 0; i < Container.Count; i++) // Loops through items in container, if the item is == to item, increase amount in return.
+        // Ensures the database is loaded
+        if (database == null)
+#if UNITY_EDITOR
+            database = (ItemDatabaseObject)AssetDatabase.LoadAssetAtPath("Assets/Resources/Database.asset", typeof(ItemDatabaseObject));
+#else
+            database = Resources.Load<ItemDatabaseObject>("Database");
+#endif
+
+        // Loops through items in container, if the item is == to item, increase amount in return.
+        for (int i = 0; i < Container.Count; i++)
         {
             if (Container[i].item == _item)
             {
@@ -33,40 +42,44 @@ public class InventoryObject : ScriptableObject, ISerializationCallbackReceiver
             }
         }
         Container.Add(new InventorySlot(database.GetId[_item], _item, _amount));
-
     }
 
     public void Save()
     {
         string saveData = JsonUtility.ToJson(this, true);
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(string.Concat(Application.persistentDataPath, savePath));
-        bf.Serialize(file, saveData);
-        file.Close();
+        File.WriteAllText(Path.Combine(Application.persistentDataPath, savePath), saveData);
+        Debug.Log("Saved Inventory: " + saveData);
     }
 
     public void Load()
     {
-        if (File.Exists(string.Concat(Application.persistentDataPath, savePath)))
+        string fullPath = Path.Combine(Application.persistentDataPath, savePath);
+        if (File.Exists(fullPath))
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(string.Concat(Application.persistentDataPath, savePath), FileMode.Open);
-            JsonUtility.FromJsonOverwrite(bf.Deserialize(file).ToString(), this);
-            file.Close();
+            string saveData = File.ReadAllText(fullPath);
+            JsonUtility.FromJsonOverwrite(saveData, this);
+            Debug.Log("Loaded Inventory: " + saveData);
+        }
+        else
+        {
+            Debug.LogError("No save file found at " + fullPath);
         }
     }
 
     public void OnAfterDeserialize()
     {
-        for (int i = 0; i < Container.Count; i++)
+        // Re-link items by ID from a loaded database, ensure the database is not called here.
+        foreach (var slot in Container)
         {
-            Container[i].item = database.GetItem[Container[i].ID];
+            if (database != null && database.GetItem.ContainsKey(slot.ID))
+                slot.item = database.GetItem[slot.ID];
+            else
+                Debug.LogError("Failed to link item ID: " + slot.ID);
         }
     }
 
     public void OnBeforeSerialize()
     {
-
     }
 }
 

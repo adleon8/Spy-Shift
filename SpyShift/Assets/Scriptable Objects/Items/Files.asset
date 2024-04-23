@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: Files
   m_EditorClassIdentifier: 
   prefab: {fileID: 8586888086151534350, guid: 87839319d03ed4447bc36856044da024, type: 3}
+  worldPrefab: {fileID: 8686790620191993074, guid: 079eb212c0ba85348b49da3f6ae202ab,
+    type: 3}
   type: 5
-  description: The sought-after extra secret files
+  description: 'Secret Files.
+
+    The sought-after extra secret files, once you
+    escape it''s mission accomplished!'

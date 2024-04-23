@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: Coin
   m_EditorClassIdentifier: 
   prefab: {fileID: 4033141976715470258, guid: fdb5bec1df70d7743980f66502f35f58, type: 3}
+  worldPrefab: {fileID: 1557136923055028755, guid: 0f2ee73beb98dbc4c8e90b7d526a42c8,
+    type: 3}
   type: 1
-  description: The most valued currency!
+  description: 'Coin.
+
+    The most valued currency!'
   addCoinValue: 1

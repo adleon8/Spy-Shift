@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: Key
   m_EditorClassIdentifier: 
   prefab: {fileID: 6200715898214236191, guid: b01b8d2e21b84aa4da572b1268d30f41, type: 3}
+  worldPrefab: {fileID: 5841584010038413821, guid: 336476df47f7e0d41b76190c64644fd0,
+    type: 3}
   type: 2
-  description: Easiest way into a room
+  description: 'Key.
+
+    Easiest way into a room'

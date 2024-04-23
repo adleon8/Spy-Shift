@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: Projectile
   m_EditorClassIdentifier: 
   prefab: {fileID: 532227545658180533, guid: 49cba153eebae094f963f0c0d86d7546, type: 3}
+  worldPrefab: {fileID: 6172151553999330057, guid: 3023a43d6843bb24a8fe32b3d6f34cdb,
+    type: 3}
   type: 0
-  description: Throwable projectiles
+  description: 'Projectile.
+
+    You can throw projectiles at the enemy'

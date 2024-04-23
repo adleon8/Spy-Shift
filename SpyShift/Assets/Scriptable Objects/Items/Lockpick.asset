@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: Lockpick
   m_EditorClassIdentifier: 
   prefab: {fileID: 2680456557476123634, guid: 6d34fd506d5f3244dbf49bfcd2388dc0, type: 3}
+  worldPrefab: {fileID: 8163117841128671437, guid: 9781d08120f7de545b8b779874514dc6,
+    type: 3}
   type: 3
-  description: To open even the most locked doors!
+  description: 'Lockpick.
+
+    Any secret spy can use this to open even the most
+    locked doors!'

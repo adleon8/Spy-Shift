@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: Mine
   m_EditorClassIdentifier: 
   prefab: {fileID: 190730795720184260, guid: bf57c62ac465e51409e820c4c77cf9cb, type: 3}
+  worldPrefab: {fileID: 6986287025339425347, guid: 10b03363ab8365f459cf034b1c230a86,
+    type: 3}
   type: 4
-  description: Watch your step after placing down a mine
+  description: 'Mine.
+
+    Watch your step after placing down a mine, enemies can
+    trigger it'
