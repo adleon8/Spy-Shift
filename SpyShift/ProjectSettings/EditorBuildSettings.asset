@@ -6,9 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Original/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Daniella's Scene.unity
+    path: Assets/Original/Scenes/Daniella's Scene.unity
     guid: 9a1dc41edda4f8a498b8707db792f11c
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 0e4f0a647641da041afa9bcb8b93ad6f,
+      type: 2}
