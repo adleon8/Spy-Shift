@@ -13,12 +13,13 @@ public class Door : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag=="Player")
+        PlayerController playerController = other.GetComponent<PlayerController>();
+        if (playerController != null && playerController.hasKey)
         {
-            if (other.GetComponent<PlayerController>().hasKey)
-            {
-                animator.SetBool("isOpen", true);
-            }
+            // Open the door
+            animator.SetBool("isOpen", true);
+            // Use the key
+            playerController.hasKey = false;
         }
     }
 }

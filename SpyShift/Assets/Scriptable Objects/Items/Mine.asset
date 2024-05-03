@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7210f1ffaba0073468d99c711c60aa12, type: 3}
+  m_Name: Mine
+  m_EditorClassIdentifier: 
+  inventoryPrefab: {fileID: 6200715898214236191, guid: 109084ec76178b04280490730ad66a0f,
+    type: 3}
+  worldPrefab: {fileID: 6986287025339425347, guid: 10b03363ab8365f459cf034b1c230a86,
+    type: 3}
+  type: 4
+  description: 'Mine.
+
+    Watch your step after placing down a mine, enemies can
+    trigger it'
+  distance: 2

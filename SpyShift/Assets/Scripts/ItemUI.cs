@@ -10,6 +10,7 @@ public class ItemUI : MonoBehaviour
     private int useNum = 3;
     private Text numText;
     private Button btn;
+    public ItemObject item;
 
     public int UseNum
     {

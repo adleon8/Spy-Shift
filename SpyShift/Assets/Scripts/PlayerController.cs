@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     //move
     private Vector2 moveDir;
     private Rigidbody rigid;
-    private int speed = 5;
+    public int speed = 9;
 
     public float minSpinDistance;
 
@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Item")]
     public bool hasKey;
+    public bool hasFile;
     public ItemUI currentItemUI;
     public GameObject transquillizerPrefab;
     public GameObject minePrefab;
@@ -53,6 +54,8 @@ public class PlayerController : MonoBehaviour
 
     // Merged addition from inventory.
     [Header("Inventory")]
+    public GameObject missionText;
+    public GameObject escapeText;
     public InventoryObject inventory;
     public GameObject inventoryScreen; // Reference to the inventory UI screen
 
@@ -155,6 +158,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        MissionDisplay();
         HandleInput();
 
         if (isShootingRock)
@@ -206,91 +210,31 @@ public class PlayerController : MonoBehaviour
             Stamina += Time.deltaTime * staminaChangeMultiple;
             speed = 5;
         }
-
-
-        /*
-
-        if (Input.GetMouseButtonDown(0)&&currentItemUI!=null)
-        {
-            if (currentItemUI.itemType==ItemType.TranquilizerGun)
-            {
-                GameObject go = Instantiate(transquillizerPrefab);
-            //    Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.main.nearClipPlane));
-                go.transform.position = transform.position;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 1000))
-                {
-                    go.transform.LookAt(hit.point);
-                }
-            }
-            else if (currentItemUI.itemType==ItemType.Mine)
-            {
-                GameObject go = Instantiate(minePrefab);
-                go.transform.position = new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z);
-            }
-            UseItem();
-            
-        }
-        if (Input.GetMouseButtonDown(1)&& currentItemUI != null)
-        {
-            currentItemUI.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-            Cursor.SetCursor(default, Vector2.zero, CursorMode.Auto);
-            currentItemUI = null;
-        }
-
-        
-    }
-
-    private void UseItem()
-    {
-        currentItemUI.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-        currentItemUI.UseNum--;
-        currentItemUI = null;
-        Cursor.SetCursor(default, Vector2.zero, CursorMode.Auto);
-    }
-
-        */
-
     }
 
     public void HandleInput()
     {
         // Merged addition.
         // Check for item use
-        if (Input.GetMouseButtonDown(0) && currentItemUI != null && currentItemUI.Item != null)
+        if (Input.GetMouseButtonDown(0) && currentItemUI != null && currentItemUI.item != null)
         {
             // Use the item
-            currentItemUI.Item.Use(gameObject);
+            currentItemUI.item.Use(gameObject); // Changing it to UseItem(currentItemUI) kind of works, but it is still not debugged. 
 
             // MAYBE - Manage item UI or inventory here
-            currentItemUI.UseItem(); // Need to adjust itemUI accordingly.
+            currentItemUI.ClickItem(); // Need to adjust itemUI accordingly.
         }
 
         // Deselection
         if (Input.GetMouseButtonDown(1) && currentItemUI != null)
         {
-            currentItemUI.GetComponent<Image>().color = new Color(1, 1, 1, 1);
-            Cursor.SetCursor(default, Vector2.zero, CursorMode.Auto);
-            currentItemUI = null;
+            DeselectItemUI();
         }
 
         // Toggle inventory screen visibility
         if (Input.GetKeyDown(KeyCode.I))
         {
             ToggleInventory();
-        }
-
-        // Save the inventory when the space bar is pressed
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            inventory.Save();
-        }
-
-        // Load the inventory when the enter key on the keypad is pressed
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            inventory.Load();
         }
 
         // Tranquilizer
@@ -305,14 +249,79 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void DeselectItemUI()
+    {
+        currentItemUI.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+        Cursor.SetCursor(default, Vector2.zero, CursorMode.Auto);
+        currentItemUI = null;
+    }
+
+
     void UseTranquilizerGun()
     {
+        Debug.Log("Using tranquilizer");
 
+        // Gets gun from inventory if available
+        ItemObject tranquilizer = inventory.GetItem(ItemType.TranquilizerGun);
+        if (tranquilizer != null)
+        {
+            tranquilizer.Use(gameObject);
+        }
+        else
+        {
+            Debug.Log("No tranquilizer found in inventory");
+        }
     }
+
+    void PlaceMine()
+    {
+        Debug.Log("Using mine");
+        // Gets mine from inventory if available
+        ItemObject mine = inventory.GetItem(ItemType.Mine);
+        if (mine != null)
+        {
+            mine.Use(gameObject);
+        }
+        else
+        {
+            Debug.Log("No mine found in inventory");
+        }
+    }
+
+    public void UseItem()
+    {
+        currentItemUI.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+        currentItemUI.UseNum--;
+        currentItemUI = null;
+        Cursor.SetCursor(default, Vector2.zero, CursorMode.Auto);
+    }
+
 
     public void ToggleInventory()
     {
-        inventoryScreen.SetActive(!inventoryScreen.activeSelf);
+        /*
+        // inventoryScreen.SetActive(!inventoryScreen.activeSelf);
+        if (!inventoryScreen.activeSelf)
+        {
+            inventoryScreen.SetActive(!inventoryScreen.activeSelf);
+        }
+        
+        if (inventoryScreen.activeSelf && Input.GetKeyDown(KeyCode.I))
+        {
+            inventoryScreen.SetActive(false);
+        }
+        */
+        if (inventoryScreen.activeSelf)
+        {
+            Debug.Log("Invent");
+            inventoryScreen.SetActive(false);
+        }
+        else
+        {
+            inventoryScreen.SetActive(true);
+        }
+
+
     }
 
     private void Projectileline()
@@ -334,11 +343,6 @@ public class PlayerController : MonoBehaviour
 
     public void Move(InputAction.CallbackContext input )
     {
-        //if (input.performed)
-        //{
-        //    Vector2 v= input.ReadValue<Vector2>();
-        //    rigid.velocity = new Vector3(v.x, 0, v.y);
-        //}
         moveDir = input.ReadValue<Vector2>();
     }
 
@@ -430,6 +434,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void MissionDisplay()
+    {
+        // MissionText is set active in start.
+        if (hasFile)
+        {
+            missionText.SetActive(false);
+            escapeText.SetActive(true);
+        }
+        else
+        {
+            missionText.SetActive(true);
+            escapeText.SetActive(false);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         // Key
@@ -438,6 +457,15 @@ public class PlayerController : MonoBehaviour
             hasKey = true;
             Destroy(other.gameObject);
         }
+
+        // Files
+        if (other.tag == "Files")
+        {
+            //Debug.Log("FILES");
+            hasFile = true;
+            Destroy(other.gameObject);
+        }
+
 
         // Enemy
         if (other.tag == "Enemy")
@@ -468,6 +496,7 @@ public class PlayerController : MonoBehaviour
     {
         inventory.Container.Clear();
     }
+
 
 
 }
